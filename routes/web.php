@@ -3,9 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RoomController;
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // Tambahan penting untuk cek role
 
 // 1. HALAMAN UTAMA (WELCOME)
 Route::get('/', function () {
@@ -16,28 +16,19 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- DASHBOARD USER ---
-    // Dashboard Galeri Ruangan
+    Route::get('/dashboard', function (Request $request) {
+        $rooms = \App\Models\Room::all(); 
+        $selectedRoomId = $request->query('room_id');
+        $myBookings = \App\Models\Booking::where('user_id', auth()->id())->get();
 
+        return view('dashboard', compact('rooms', 'selectedRoomId', 'myBookings'));
+    })->name('dashboard');
 
-Route::get('/dashboard', function (Request $request) {
-    // 1. Ambil semua data ruangan
-    $rooms = \App\Models\Room::all(); 
-    
-    // 2. TANGKAP ID RUANGAN (Ini yang tadi menyebabkan error)
-    $selectedRoomId = $request->query('room_id');
-
-    // 3. Ambil riwayat booking (agar tabel riwayat tidak error)
-    $myBookings = \App\Models\Booking::where('user_id', auth()->id())->get();
-
-    // 4. Kirim SEMUA variabel ke view
-    return view('dashboard', compact('rooms', 'selectedRoomId', 'myBookings'));
-})->name('dashboard');
-
-    Route::get('/denah', [App\Http\Controllers\RoomController::class, 'denah'])->name('denah')->middleware(['auth']);
+    // PERBAIKAN 1: Nama route diganti jadi 'denah3d' biar sinkron sama menu HP
+    Route::get('/denah', [RoomController::class, 'denah'])->name('denah3d');
 
     // Halaman Form Peminjaman & Riwayat
- // Route untuk halaman peminjaman
-Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index'])->name('peminjaman');
+    Route::get('/peminjaman', [BookingController::class, 'index'])->name('peminjaman');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     
     // Fitur Download PDF
@@ -49,16 +40,25 @@ Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index
     })->name('about');
 
 
-    // --- JALUR KHUSUS ADMIN PANEL ---
-    // Kita pakai prefix 'admin' agar rapi
-    Route::prefix('admin')->group(function () {
+    // --- JALUR KHUSUS ADMIN PANEL (PERBAIKAN KEAMANAN) ---
+    // Kita tambahkan pengecekan: Kalau bukan admin, tendang keluar!
+    Route::prefix('admin')->middleware(function ($request, $next) {
         
-        // Halaman Awal Admin (Otomatis ke List Ruangan)
+        if (Auth::user()->role !== 'admin') {
+            // Kalau user biasa coba masuk, kembalikan ke dashboard
+            return redirect()->route('dashboard'); 
+            // Atau bisa pakai: abort(403, 'ANDA BUKAN ADMIN!');
+        }
+        return $next($request);
+
+    })->group(function () {
+        
+        // Halaman Awal Admin
         Route::get('/', function () {
             return redirect()->route('admin.rooms.index');
         })->name('admin.dashboard');
 
-        // CRUD Kelola Ruangan (Sultan Mode)
+        // CRUD Kelola Ruangan
         Route::resource('rooms', RoomController::class)->names([
             'index' => 'admin.rooms.index',
             'create' => 'admin.rooms.create',
@@ -68,14 +68,13 @@ Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index
             'destroy' => 'admin.rooms.destroy',
         ]);
 
-        // KELOLA PEMINJAMAN (Approval/Reject)
-        // Rute ini yang tadi error karena belum ada
+        // KELOLA PEMINJAMAN
         Route::get('/bookings', [BookingController::class, 'allBookings'])->name('admin.bookings.index');
         Route::patch('/bookings/{id}/status', [BookingController::class, 'updateStatus'])->name('admin.bookings.update');
     });
 
 
-    // --- PROFILE USER (Bawaan Breeze) ---
+    // --- PROFILE USER ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
