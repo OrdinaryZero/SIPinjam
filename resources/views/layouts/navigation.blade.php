@@ -120,10 +120,10 @@
                 {{ __('Peminjaman') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('denah')" :active="request()->routeIs('denah')" class="text-gray-300">
-                {{ __('Denah') }}
+                {{ __('Denah') }}   
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" class="text-gray-300">
-                {{ __('About Us') }}
+                {{ __('About') }}
             </x-responsive-nav-link>
             
             @if(Auth::user()->role === 'admin')

@@ -3,10 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; 
-use App\Http\Middleware\IsAdmin;
 
 // 1. HALAMAN UTAMA (WELCOME)
 Route::get('/', function () {
@@ -17,19 +16,28 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- DASHBOARD USER ---
-    Route::get('/dashboard', function (Request $request) {
-        $rooms = \App\Models\Room::all(); 
-        $selectedRoomId = $request->query('room_id');
-        $myBookings = \App\Models\Booking::where('user_id', auth()->id())->get();
+    // Dashboard Galeri Ruangan
 
-        return view('dashboard', compact('rooms', 'selectedRoomId', 'myBookings'));
-    })->name('dashboard');
 
-    // PERBAIKAN 1: Nama route diganti jadi 'denah3d' biar sinkron sama menu HP
-    Route::get('/denah', [RoomController::class, 'denah'])->name('denah3d');
+Route::get('/dashboard', function (Request $request) {
+    // 1. Ambil semua data ruangan
+    $rooms = \App\Models\Room::all(); 
+    
+    // 2. TANGKAP ID RUANGAN (Ini yang tadi menyebabkan error)
+    $selectedRoomId = $request->query('room_id');
+
+    // 3. Ambil riwayat booking (agar tabel riwayat tidak error)
+    $myBookings = \App\Models\Booking::where('user_id', auth()->id())->get();
+
+    // 4. Kirim SEMUA variabel ke view
+    return view('dashboard', compact('rooms', 'selectedRoomId', 'myBookings'));
+})->name('dashboard');
+
+    Route::get('/denah', [App\Http\Controllers\RoomController::class, 'denah'])->name('denah')->middleware(['auth']);
 
     // Halaman Form Peminjaman & Riwayat
-    Route::get('/peminjaman', [BookingController::class, 'index'])->name('peminjaman');
+ // Route untuk halaman peminjaman
+Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index'])->name('peminjaman');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     
     // Fitur Download PDF
@@ -41,18 +49,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('about');
 
 
-    // --- JALUR KHUSUS ADMIN PANEL (PERBAIKAN KEAMANAN) ---
-    // Kita tambahkan pengecekan: Kalau bukan admin, tendang keluar!
-   // --- JALUR KHUSUS ADMIN PANEL (YANG SUDAH DIPERBAIKI) ---
-    // Kita panggil IsAdmin::class sebagai satpamnya
-    Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
+    // --- JALUR KHUSUS ADMIN PANEL ---
+    // Kita pakai prefix 'admin' agar rapi
+    Route::prefix('admin')->group(function () {
         
-        // Halaman Awal Admin
+        // Halaman Awal Admin (Otomatis ke List Ruangan)
         Route::get('/', function () {
             return redirect()->route('admin.rooms.index');
         })->name('admin.dashboard');
 
-        // CRUD Kelola Ruangan
+        // CRUD Kelola Ruangan (Sultan Mode)
         Route::resource('rooms', RoomController::class)->names([
             'index' => 'admin.rooms.index',
             'create' => 'admin.rooms.create',
@@ -62,12 +68,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'destroy' => 'admin.rooms.destroy',
         ]);
 
-        // KELOLA PEMINJAMAN
+        // KELOLA PEMINJAMAN (Approval/Reject)
+        // Rute ini yang tadi error karena belum ada
         Route::get('/bookings', [BookingController::class, 'allBookings'])->name('admin.bookings.index');
         Route::patch('/bookings/{id}/status', [BookingController::class, 'updateStatus'])->name('admin.bookings.update');
     });
 
-    // --- PROFILE USER ---
+
+    // --- PROFILE USER (Bawaan Breeze) ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
