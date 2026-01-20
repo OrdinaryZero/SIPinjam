@@ -6,6 +6,8 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\QuickBookingController;
+use App\Http\Controllers\AdminRoomController;
 
 // 1. HALAMAN UTAMA (WELCOME)
 Route::get('/', function () {
@@ -52,6 +54,8 @@ Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index
     // --- JALUR KHUSUS ADMIN PANEL ---
     // Kita pakai prefix 'admin' agar rapi
     Route::prefix('admin')->group(function () {
+
+        Route::post('/admin/rooms/{id}/reset', [AdminRoomController::class, 'resetStatus'])->name('admin.rooms.reset');
         
         // Halaman Awal Admin (Otomatis ke List Ruangan)
         Route::get('/', function () {
@@ -79,6 +83,14 @@ Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+
+// Route untuk halaman Scan QR (GET)
+Route::get('/scan/{room_id}', [QuickBookingController::class, 'show'])->name('scan.show');
+
+// Route untuk memproses booking cepat (POST)
+Route::post('/scan/process', [QuickBookingController::class, 'store'])->name('scan.store');
 });
 
 require __DIR__.'/auth.php';

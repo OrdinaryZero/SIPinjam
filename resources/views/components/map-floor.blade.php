@@ -1,28 +1,83 @@
+@props(['floor', 'rooms'])
+
 @php
-    // Ambil ruangan berdasarkan angka lantai (1, 2, atau 3)
-    $floorRooms = $rooms->filter(function($r) use ($floor) {
-        return str_contains($r->lokasi_lantai, (string)$floor);
-    });
-    
-    // Koordinat yang sudah saya sesuaikan agar berjarak rapi
-    $coords = [
-        ['150,150 300,225 150,300 0,225', '70', '235'],   // Kiri
-        ['410,150 560,225 410,300 260,225', '330', '235'], // Atas
-        ['260,230 410,305 260,380 110,305', '180', '315'], // Tengah
-        ['520,230 670,305 520,380 370,305', '440', '315']  // Kanan
-    ];
+    $floorRooms = $rooms->where('lokasi_lantai', $floor)->values();
+
+    // Setting Grid
+    $startX = 400; 
+    $startY = 100;
+    $offsetX = 60;  
+    $offsetY = 35;  
+    $cols = 4; 
 @endphp
 
-@foreach($floorRooms->values() as $index => $room)
-    @if($index < 4)
-    <a href="{{ route('peminjaman', ['room_id' => $room->id]) }}" class="room-group">
-        <polygon points="{{ $coords[$index][0] }}" 
-            class="room-path stroke-white/10 transition-all duration-500 {{ $room->status == 'tersedia' ? 'fill-white' : 'fill-zinc-900 opacity-60' }}" />
+<g opacity="0.1">
+    @for($i = 0; $i <= 10; $i++)
+        <path d="M{{ 100 + ($i*30) }} {{ 210 - ($i*15) }} L{{ 400 + ($i*30) }} {{ 360 - ($i*15) }}" stroke="white" stroke-width="1" />
+        <path d="M{{ 100 + ($i*30) }} {{ 210 + ($i*15) }} L{{ 400 + ($i*30) }} {{ 60 + ($i*15) }}" stroke="white" stroke-width="1" />
+    @endfor
+</g>
+
+@foreach($floorRooms as $index => $room)
+    @php
+        $row = floor($index / $cols);
+        $col = $index % $cols;
+
+        $x = $startX + ($col - $row) * $offsetX;
+        $y = $startY + ($col + $row) * $offsetY;
+
+        // BERSIHKAN STATUS
+        $statusRaw = strtolower(trim($room->status));
+
+        // LOGIKA WARNA (Perbaikan Variable Name)
+        $isAvailable = ($statusRaw == 'tersedia' || $statusRaw == 'available');
+
+        if ($isAvailable) {
+            // TEMA: AVAILABLE (PUTIH MATTE)
+            $topColor    = '#f8fafc'; // Putih
+            $leftColor   = '#94a3b8'; // Abu shadow
+            $rightColor  = '#cbd5e1'; // Abu terang
+            $strokeColor = '#64748b'; // Garis abu
+            $textColor   = '#0f172a'; // Teks Hitam
+        } else {
+            // TEMA: BOOKED (MERAH SOLID)
+            $topColor    = '#ef4444'; // Merah (Red-500)
+            $leftColor   = '#7f1d1d'; // Merah Gelap (Red-900)
+            $rightColor  = '#b91c1c'; // Merah Sedang (Red-700)
+            $strokeColor = '#450a0a'; // Garis Merah Tua
+            $textColor   = '#ffffff'; // Teks Putih
+        }
+    @endphp
+
+    <g class="cursor-pointer transition-transform duration-300 hover:-translate-y-2 group"
+       @click="activeRoom = {{ $room }}">
         
-        <text x="{{ $coords[$index][1] }}" y="{{ $coords[$index][2] }}" 
-            class="text-[14px] font-black italic tracking-tighter pointer-events-none {{ $room->status == 'tersedia' ? 'fill-black' : 'fill-white/20' }}">
-            {{ strtoupper($room->nama_ruangan) }}
+        <path d="M{{ $x }} {{ $y + 50 }} L{{ $x + 30 }} {{ $y + 65 }} L{{ $x - 30 }} {{ $y + 65 }} Z" fill="black" opacity="0.3" class="blur-[1px]" />
+
+        <path d="M{{ $x }} {{ $y + 10 }} L{{ $x }} {{ $y + 50 }} L{{ $x - 30 }} {{ $y + 35 }} L{{ $x - 30 }} {{ $y - 5 }} Z" 
+              fill="{{ $leftColor }}" stroke="{{ $strokeColor }}" stroke-width="0.5"/>
+        
+        <path d="M{{ $x }} {{ $y + 10 }} L{{ $x }} {{ $y + 50 }} L{{ $x + 30 }} {{ $y + 35 }} L{{ $x + 30 }} {{ $y - 5 }} Z" 
+              fill="{{ $rightColor }}" stroke="{{ $strokeColor }}" stroke-width="0.5"/>
+
+        <path d="M{{ $x }} {{ $y + 10 }} L{{ $x + 30 }} {{ $y - 5 }} L{{ $x }} {{ $y - 20 }} L{{ $x - 30 }} {{ $y - 5 }} Z" 
+              fill="{{ $topColor }}" stroke="{{ $strokeColor }}" stroke-width="0.5" />
+
+        <text x="{{ $x }}" y="{{ $y - 8 }}" 
+              text-anchor="middle" 
+              fill="{{ $textColor }}" 
+              font-family="sans-serif" 
+              font-size="9" 
+              font-weight="800"
+              style="pointer-events: none; text-transform: uppercase; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+            {{ Str::limit($room->nama_ruangan, 10) }}
         </text>
-    </a>
-    @endif
+
+    </g>
 @endforeach
+
+@if($floorRooms->isEmpty())
+    <text x="400" y="250" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="14">
+        (LANTAI KOSONG)
+    </text>
+@endif
