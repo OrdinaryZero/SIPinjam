@@ -118,8 +118,8 @@
             {{ __('Dashboard') }}
         </x-responsive-nav-link>
 
-        <x-responsive-nav-link :href="route('denah3d')" :active="request()->routeIs('denah3d')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
-            {{ __('D E N A H  3 D') }}
+        <x-responsive-nav-link :href="route('denah')" :active="request()->routeIs('denah')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
+            {{ __('Denah 3D') }}
         </x-responsive-nav-link>
 
         <x-responsive-nav-link :href="route('peminjaman')" :active="request()->routeIs('peminjaman')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
