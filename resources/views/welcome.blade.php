@@ -25,7 +25,7 @@
                 
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 hover:bg-white/10 transition cursor-default">
                     <span class="flex h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                    <span class="text-[10px] font-bold text-cyan-300 tracking-wider uppercase">Sistem v2.0 Live</span>
+                    <span class="text-[10px] font-bold text-cyan-300 tracking-wider uppercase">SiPinjam 2.0</span>
                 </div>
 
                 <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
@@ -44,8 +44,8 @@
                         <span class="relative z-10">Mulai Sekarang</span>
                         <div class="absolute inset-0 bg-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
                     </a>
-                    
-                    <a href="{{ route('denah') }}" class="px-8 py-3 rounded-full border border-white/20 text-white font-medium text-xs hover:bg-white/5 hover:border-white/40 transition-all flex items-center gap-2">
+
+                    <a href="{{ route('dashboard') }}" class="px-8 py-3 rounded-full border border-white/20 text-white font-medium text-xs hover:bg-white/5 hover:border-white/40 transition-all flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Lihat Denah 3D
                     </a>
@@ -59,10 +59,18 @@
                             <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/20"></div>
                             <div class="w-2.5 h-2.5 rounded-full bg-green-500/20"></div>
                         </div>
-                        <div class="aspect-[16/9] bg-gradient-to-br from-[#151515] to-black relative flex items-center justify-center">
-                            <span class="text-white/10 font-bold text-3xl tracking-widest uppercase">Dashboard Preview</span>
-                            <div class="absolute inset-0 bg-[url('https://play.tailwindcss.com/img/grid.svg')] opacity-[0.05]"></div>
-                        </div>
+<div class="aspect-[16/9] bg-[#0a0a0a] relative overflow-hidden group">
+    <img src="{{ asset('img/dashboard-preview.jpg') }}" 
+         alt="SiPinjam Dashboard Preview" 
+         class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 ease-in-out">
+
+    <div class="absolute inset-0 bg-[url('https://play.tailwindcss.com/img/grid.svg')] opacity-[0.1] pointer-events-none"></div>
+
+    <div class="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-md border border-white/10 rounded-full">
+        <div class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+        <span class="text-[9px] font-bold text-white uppercase tracking-widest"> Preview</span>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
@@ -183,7 +191,7 @@
                             <span class="font-bold text-lg text-white">SiPinjam</span>
                         </a>
                         <p class="text-xs text-gray-500 leading-relaxed max-w-xs">
-                            Sistem Informasi Peminjaman Ruangan Fakultas Saintek UIN Antasari Banjarmasin.
+                            Sistem Informasi Peminjaman Ruangan Gedung Saintek UIN Antasari Banjarmasin.
                         </p>
                     </div>
 
@@ -191,7 +199,7 @@
                         <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-4">Menu</h4>
                         <ul class="space-y-2">
                             <li><a href="{{ route('dashboard') }}" class="text-xs text-gray-500 hover:text-cyan-400 transition">Dashboard</a></li>
-                            <li><a href="{{ route('denah') }}" class="text-xs text-gray-500 hover:text-cyan-400 transition">Denah 3D</a></li>
+                            <li><a href="/" class="text-xs text-gray-500 hover:text-cyan-400 transition">Denah</a></li>
                             <li><a href="{{ route('peminjaman') }}" class="text-xs text-gray-500 hover:text-cyan-400 transition">Cek Jadwal</a></li>
                         </ul>
                     </div>

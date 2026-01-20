@@ -14,66 +14,85 @@
 
             <div class="bg-zinc-900/60 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 uppercase text-xs tracking-wider">
-                            <tr>
-                                <th class="px-6 py-4">Pemohon</th>
-                                <th class="px-6 py-4">Ruangan</th>
-                                <th class="px-6 py-4">Waktu</th>
-                                <th class="px-6 py-4">Keperluan</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5 text-gray-300 text-sm">
-                            @foreach($bookings as $booking)
-                            <tr class="hover:bg-white/5 transition">
-                                <td class="px-6 py-4 font-bold text-white">{{ $booking->user->name }}</td>
-                                <td class="px-6 py-4">
-                                    {{ $booking->room->nama_ruangan }}
-                                    <span class="block text-xs text-gray-500">{{ $booking->room->lokasi_lantai }}</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $booking->tanggal }}
-                                    <span class="block text-xs text-indigo-400">{{ $booking->jam_mulai }} - {{ $booking->jam_selesai }}</span>
-                                </td>
-                                <td class="px-6 py-4 max-w-xs truncate">{{ $booking->keperluan }}</td>
-                                <td class="px-6 py-4">
-                                    @if($booking->status == 'pending')
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-900/40 text-amber-400 border border-amber-500/20">PENDING</span>
-                                    @elseif($booking->status == 'approved')
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-900/40 text-emerald-400 border border-emerald-500/20">APPROVED</span>
-                                    @else
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-900/40 text-rose-400 border border-rose-500/20">REJECTED</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 flex justify-center gap-2">
-                                    @if($booking->status == 'pending')
-                                        <form action="{{ route('admin.update', $booking->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="status" value="approved">
-                                            <button type="submit" class="p-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white shadow-lg shadow-emerald-900/20 transition transform hover:scale-110">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                            </button>
-                                        </form>
+                    <table class="w-full">
+    <thead>
+        <tr>
+            <th class="px-6 py-4">Ruangan</th>
+            <th class="px-6 py-4">Status & Sisa Waktu</th> <th class="px-6 py-4 text-right">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($rooms as $room)
+        <tr>
+            <td class="px-6 py-4 font-bold">{{ $room->nama_ruangan }}</td>
+            <td class="px-6 py-4">
+                @php
+                    // Ambil data booking yang sedang jalan di ruangan ini
+                    $active = $room->bookings->first();
+                    $isOccupied = (strtolower($room->status) != 'tersedia' && $active);
+                @endphp
 
-                                        <form action="{{ route('admin.update', $booking->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="status" value="rejected">
-                                            <button type="submit" class="p-2 bg-rose-600 hover:bg-rose-500 rounded-lg text-white shadow-lg shadow-rose-900/20 transition transform hover:scale-110">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-xs text-gray-600 italic">Selesai</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                @if($isOccupied)
+                    <div class="flex flex-col">
+                        <span class="text-rose-500 font-bold uppercase text-[10px]">● Sedang Dipakai</span>
+                        <span class="text-yellow-400 font-mono font-bold text-lg" 
+                              id="admin-timer-{{ $room->id }}" 
+                              data-end="{{ \Carbon\Carbon::parse($active->tanggal . ' ' . $active->jam_selesai)->timestamp * 1000 }}">
+                            00:00:00
+                        </span>
+                    </div>
+                @else
+                    <span class="text-emerald-500 font-bold uppercase text-[10px]">● Tersedia</span>
+                @endif
+            </td>
+            <td class="px-6 py-4 text-right">
+                @if($isOccupied)
+                    <form action="{{ route('admin.rooms.reset', $room->id) }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="bg-rose-600 px-3 py-1 rounded text-[10px] font-bold text-white hover:bg-rose-700 transition">
+                            STOP PAKSA
+                        </button>
+                    </form>
+                @endif
+                <a href="{{ route('rooms.edit', $room->id) }}" class="text-cyan-400 text-xs ml-2">Edit</a>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
                 </div>
             </div>
         </div>
     </div>
+
+<script>
+    function startAdminTimers() {
+        setInterval(() => {
+            // Cari semua element yang ada ID admin-timer-
+            document.querySelectorAll('[id^="admin-timer-"]').forEach(timer => {
+                const endTime = parseInt(timer.getAttribute('data-end'));
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    timer.innerHTML = "WAKTU HABIS";
+                    timer.classList.remove('text-yellow-400');
+                    timer.classList.add('text-gray-500');
+                } else {
+                    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    // Format biar jadi 00:00:00
+                    timer.innerHTML = 
+                        (h < 10 ? "0" + h : h) + ":" + 
+                        (m < 10 ? "0" + m : m) + ":" + 
+                        (s < 10 ? "0" + s : s);
+                }
+            });
+        }, 1000);
+    }
+    document.addEventListener('DOMContentLoaded', startAdminTimers);
+</script>
+
 </x-app-layout>

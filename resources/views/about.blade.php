@@ -1,60 +1,70 @@
 <x-app-layout>
-    <div class="py-20 relative min-h-screen bg-black overflow-hidden">
-        <div class="max-w-5xl mx-auto px-6 lg:px-8">
+    <div class="min-h-screen  text-white relative overflow-hidden font-sans">
+
+        <div class="max-w-7xl mx-auto px-6 py-20 relative z-10">
             
-            <div class="border-l-4 border-white pl-8 mb-20">
-                <h1 class="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none">
-                    Saintek<br>Space.
+            <div class="text-center mb-20">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400 backdrop-blur-md mb-6">
+                    Project Info
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent">
+                    SiPinjam V2.0
                 </h1>
-                <p class="mt-6 text-gray-500 max-w-xl text-lg uppercase tracking-widest font-light">
-                    Sistem Manajemen Ruangan Terpadu Fakultas Sains dan Teknologi.
+                <p class="max-w-2xl mx-auto text-gray-400 text-lg leading-relaxed font-medium opacity-80">
+                    Solusi cerdas manajemen ruangan kampus berbasis visualisasi interaktif. Mempermudah birokrasi dan transparansi penggunaan fasilitas akademik.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24 border-t border-white/10 pt-12">
-                <div>
-                    <h2 class="text-xs font-black text-white uppercase tracking-[0.3em] mb-6">Organisasi</h2>
-                    <p class="text-gray-400 leading-relaxed text-sm">
-                        Platform ini dikelola sepenuhnya oleh <span class="text-white font-bold">Himpunan Mahasiswa Teknologi Informasi (HIMATI)</span> UIN Antasari Banjarmasin. Kami fokus pada efisiensi birokrasi dan digitalisasi fasilitas kampus untuk mempermudah seluruh civitas akademika.
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+                
+                <div class="group bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-xl hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2 shadow-2xl">
+                    <div class="w-12 h-12 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 tracking-tight">Visualisasi Presisi</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
+                        Melihat posisi ruangan secara presisi melalui denah interaktif yang memudahkan navigasi di setiap lantai gedung.
                     </p>
                 </div>
-                <div class="space-y-8">
-                    <div>
-                        <h2 class="text-xs font-black text-white uppercase tracking-[0.3em] mb-4">Visi</h2>
-                        <p class="text-gray-400 text-sm italic">"Digitalisasi birokrasi kampus yang transparan dan inklusif."</p>
+
+                <div class="group bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-xl hover:border-indigo-500/50 transition-all duration-500 hover:-translate-y-2 shadow-2xl">
+                    <div class="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
-                    <div>
-                        <h2 class="text-xs font-black text-white uppercase tracking-[0.3em] mb-4">Misi</h2>
-                        <ul class="text-gray-400 text-sm space-y-2">
-                            <li class="flex items-start gap-2"><span>—</span> Efisiensi waktu peminjaman.</li>
-                            <li class="flex items-start gap-2"><span>—</span> Transparansi ketersediaan fasilitas.</li>
-                            <li class="flex items-start gap-2"><span>—</span> Pendataan inventaris yang akurat.</li>
-                        </ul>
-                    </div>
+                    <h3 class="text-xl font-bold mb-3 tracking-tight">Akses Real-Time</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
+                        Sistem pemantauan status ruangan yang diperbarui setiap detik. Transparansi penuh untuk seluruh civitas akademika.
+                    </p>
                 </div>
+
+                <div class="group bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-xl hover:border-emerald-500/50 transition-all duration-500 hover:-translate-y-2 shadow-2xl">
+                    <div class="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 tracking-tight">Quick Scan QR</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
+                        Teknologi peminjaman instan di lokasi. Cukup scan kode QR di pintu dan ruangan resmi terkunci untuk Anda.
+                    </p>
+                </div>
+
             </div>
 
-            <div class="bg-white p-10 md:p-16 flex flex-col md:flex-row justify-between items-center gap-8 rounded-none">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-black text-black uppercase tracking-tighter">Butuh Bantuan?</h3>
-                    <p class="text-gray-600 text-xs uppercase tracking-widest mt-2 font-bold">Laporan masalah atau kerjasama</p>
+            <div class="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-10">
+                
+                <div class="flex items-center gap-3 group">
+                    <div class="text-white group-hover:text-cyan-400 transition-colors duration-300 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+                        <svg class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-white uppercase">SiPinjam</span>
                 </div>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="mailto:himati@uin-antasari.ac.id" class="px-8 py-4 bg-black text-white text-[10px] font-black uppercase tracking-[0.2em] hover:invert transition duration-500">
-                        Email Kami
-                    </a>
-                    <a href="#" class="px-8 py-4 border-2 border-black text-black text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black hover:text-white transition duration-500">
-                        Instagram
-                    </a>
+
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.3em] mb-1">Developed By</p>
+                    <p class="text-sm font-bold text-white tracking-widest uppercase">Feb - Project</p>
                 </div>
             </div>
-
-            <footer class="mt-20 text-center">
-                <p class="text-[10px] text-gray-600 uppercase tracking-[0.5em]">
-                    &copy; 2026 HIMATI UIN Antasari Banjarmasin
-                </p>
-            </footer>
-
         </div>
     </div>
 </x-app-layout>

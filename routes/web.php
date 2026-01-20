@@ -56,6 +56,8 @@ Route::get('/peminjaman', [App\Http\Controllers\BookingController::class, 'index
     Route::prefix('admin')->group(function () {
 
         Route::post('/admin/rooms/{id}/reset', [AdminRoomController::class, 'resetStatus'])->name('admin.rooms.reset');
+        // Tambahkan di dalam group admin atau di bawah route admin lainnya
+        Route::post('/admin/rooms/{id}/reset', [AdminController::class, 'resetStatus'])->name('admin.rooms.reset');
         
         // Halaman Awal Admin (Otomatis ke List Ruangan)
         Route::get('/', function () {
