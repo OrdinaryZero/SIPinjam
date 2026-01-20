@@ -5,7 +5,8 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Tambahan penting untuk cek role
+use Illuminate\Support\Facades\Auth; 
+use App\Http\Middleware\IsAdmin;
 
 // 1. HALAMAN UTAMA (WELCOME)
 Route::get('/', function () {
@@ -42,16 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- JALUR KHUSUS ADMIN PANEL (PERBAIKAN KEAMANAN) ---
     // Kita tambahkan pengecekan: Kalau bukan admin, tendang keluar!
-    Route::prefix('admin')->middleware(function ($request, $next) {
-        
-        if (Auth::user()->role !== 'admin') {
-            // Kalau user biasa coba masuk, kembalikan ke dashboard
-            return redirect()->route('dashboard'); 
-            // Atau bisa pakai: abort(403, 'ANDA BUKAN ADMIN!');
-        }
-        return $next($request);
-
-    })->group(function () {
+   // --- JALUR KHUSUS ADMIN PANEL (YANG SUDAH DIPERBAIKI) ---
+    // Kita panggil IsAdmin::class sebagai satpamnya
+    Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
         
         // Halaman Awal Admin
         Route::get('/', function () {
@@ -72,7 +66,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/bookings', [BookingController::class, 'allBookings'])->name('admin.bookings.index');
         Route::patch('/bookings/{id}/status', [BookingController::class, 'updateStatus'])->name('admin.bookings.update');
     });
-
 
     // --- PROFILE USER ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
