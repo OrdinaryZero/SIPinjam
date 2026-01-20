@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-black">
+<nav x-data="{ open: false }" class="bg-black/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -111,35 +111,29 @@
         </div>
     </div>
 
-<div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-zinc-900 border-b border-white/10">
-    <div class="pt-2 pb-3 space-y-1">
-        
-        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
-            {{ __('Dashboard') }}
-        </x-responsive-nav-link>
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-zinc-900 border-b border-white/10">
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-300">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('peminjaman')" :active="request()->routeIs('peminjaman')" class="text-gray-300">
+                {{ __('Peminjaman') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" class="text-gray-300">
+                {{ __('About Us') }}
+            </x-responsive-nav-link>
+            
+            @if(Auth::user()->role === 'admin')
+                <div class="px-4 py-2">
+                    <a href="{{ url('/admin') }}" 
+                       style="background-color: white !important; color: black !important; border: none !important;"
+                       class="block text-center py-2 text-xs font-bold uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                         Admin Panel
+                    </a>
+                </div>
+            @endif
+        </div>
 
-        <x-responsive-nav-link :href="route('denah')" :active="request()->routeIs('denah')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
-            {{ __('Denah 3D') }}
-        </x-responsive-nav-link>
-
-        <x-responsive-nav-link :href="route('peminjaman')" :active="request()->routeIs('peminjaman')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
-            {{ __('Peminjaman') }}
-        </x-responsive-nav-link>
-
-        <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" class="text-gray-300 hover:text-white hover:bg-white/5 transition duration-150 ease-in-out">
-            {{ __('About Us') }}
-        </x-responsive-nav-link>
-        
-        @if(Auth::user()->role === 'admin')
-            <div class="px-4 py-2 mt-2 border-t border-white/10">
-                <a href="{{ url('/admin') }}" 
-                   class="block w-full text-center py-3 text-xs font-extrabold uppercase tracking-widest rounded-lg bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] transition-all duration-300">
-                      Admin Panel
-                </a>
-            </div>
-        @endif
-    </div>
-</div>
         <div class="pt-4 pb-1 border-t border-gray-700">
             <div class="px-4 flex items-center gap-3">
                 @if(Auth::user()->avatar)
