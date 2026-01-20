@@ -19,7 +19,7 @@
             
             <div class="absolute top-[10%] right-[-10%] w-[500px] h-[500px] bg-blue-900/20 rounded-full blur-[100px]"></div>
 
-            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05]"></div>
+            <div class="absolute inset-0 bg-[url('')] opacity-[0.05]"></div>
         </div>
 
         <div class="min-h-screen relative flex flex-col">

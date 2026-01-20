@@ -15,7 +15,6 @@
         <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
             <div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-teal-900/20 rounded-full blur-[120px]"></div>
             <div class="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[120px]"></div>
-            <div class="absolute inset-0 bg-[url('')] opacity-[0.07]"></div>
         </div>
 
         @include('layouts.navigation')
