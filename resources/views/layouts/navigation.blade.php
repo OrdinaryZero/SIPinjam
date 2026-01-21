@@ -3,7 +3,7 @@
         <div class="flex h-16 items-center justify-between">
             
             <div class="shrink-0 flex items-center z-20">
-                <a href="{{ ('/') }}" class="flex items-center gap-2 group">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
                     <div class="text-white group-hover:text-cyan-400 transition-colors duration-300 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
                         <svg class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg>
                     </div>
